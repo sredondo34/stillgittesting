@@ -75,7 +75,7 @@ public class Player_Movement : MonoBehaviour
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
 
-            if(Physics.Raycast(ray, out hit, 100, movementMask))
+            if(Physics.Raycast(ray, out hit, 1000, movementMask))
             {
                 //move player to where we hit
                 Debug.Log("We Hit " + hit.collider.name + " " + hit.point);

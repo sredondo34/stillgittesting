@@ -19,7 +19,7 @@ public class Inventory : MonoBehaviour {
         instance = this;
     }
     #endregion
-
+    
     public bool Add (Item item)
     {
         if (!item.isDefaultItem)
@@ -28,7 +28,7 @@ public class Inventory : MonoBehaviour {
             {
                 Debug.Log("Not enough room. ");
                 return false;
-            }
+                            }
             items.Add(item);
         }
         return true;

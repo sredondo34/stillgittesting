@@ -11,6 +11,7 @@ public class Player_Movement : MonoBehaviour
     public LayerMask movementMask;
     Camera cam;
     PlayerMotor motor;
+    public Interactable focus;
 
 
 
@@ -72,21 +73,89 @@ public class Player_Movement : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
+
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
 
             if(Physics.Raycast(ray, out hit, 1000, movementMask))
             {
+
                 //move player to where we hit
                 Debug.Log("We Hit " + hit.collider.name + " " + hit.point);
+
                 motor.MoveToPoint(hit.point);
 
+                //stop focusing any objects
+                RemoveFocus();
+
+            }
+
+
+
+        }
+
+        // If we hit right mouse button
+        if (Input.GetMouseButtonDown(1))
+        {
+            //We create a ray
+            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            //If the Ray hits
+            if (Physics.Raycast(ray, out hit, 1000))
+            {
+
+                //Interact with objects
+                //Debug.Log("We Interacted with " + hit.collider.name + " " + hit.point);
+                Interactable interactable = hit.collider.GetComponent<Interactable>();
+
+                //If we did set it as our focus
+                if (interactable != null)
+                {
+                    SetFocus(interactable);
+                }
+  
 
             }
 
         }
 
+    }
+
+    void SetFocus (Interactable newFocus)
+    {
+
+        if(newFocus != focus)
+        {
+            if (focus != null)
+            {
+                focus.OnDefocused();
+            }
+                
+
+            focus = newFocus;
+            motor.FollowTarget(newFocus);
+
+        }
+
+        newFocus.OnFocused(transform);
+        
+
+    }
+
+    void RemoveFocus()
+    {
+        if (focus != null)
+        {
+            focus.OnDefocused();
+        }
+            
+
+        focus = null;
+        motor.StopFollowingTarget();
 
 
     }
+
+
 }
